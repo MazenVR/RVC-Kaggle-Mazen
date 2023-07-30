@@ -1618,7 +1618,7 @@ def get_presets():
     
     return preset_names
 
-with gr.Blocks(theme=gr.themes.Soft().set(
+with gr.Blocks(theme=gr.themes.Soft(primary_hue="green").set(
     button_primary_background_fill="*primary_100",
     button_primary_background_fill_hover="*primary_300")) as app:
     gr.HTML("<h1> RVC [Fork by Mazen VR] إستنساخ الصوت بالذكاء الإصطناعي </h1>")
