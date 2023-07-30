@@ -1618,7 +1618,7 @@ def get_presets():
     
     return preset_names
 
-with gr.Blocks(theme=gr.themes.Glass()) as app:
+with gr.Blocks(theme=gr.themes.Soft(secondary_hue="green")) as app:
     gr.HTML("<h1> RVC [Fork by Mazen VR] إستنساخ الصوت بالذكاء الإصطناعي </h1>")
     gr.Markdown(
         value="<b>https://www.youtube.com/@MohamedElmazen</b>"
