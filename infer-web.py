@@ -1619,11 +1619,12 @@ def get_presets():
     return preset_names
 
 with gr.Blocks(theme=gr.themes.Glass()) as app:
-    gr.HTML("<h1> RVC [Fork by Mazen VR] </h1>")
+    gr.HTML("<h1> RVC [Fork by Mazen VR] إستنساخ الصوت بالذكاء الإصطناعي </h1>")
     gr.Markdown(
-        value=i18n(
-            "<b>https://www.youtube.com/@MohamedElmazen</b>"
-        )
+        value="<b>https://www.youtube.com/@MohamedElmazen</b>"
+    )
+    gr.Markdown(
+        value="<b>Discord https://discord.gg/BXxagtuM38</b>"
     )
     with gr.Tabs():
         with gr.TabItem(i18n("模型推理")):
@@ -1661,7 +1662,7 @@ with gr.Blocks(theme=gr.themes.Glass()) as app:
                         )
                         input_audio0 = gr.Textbox(
                             label=i18n("输入待处理音频文件路径(默认是正确格式示例)"),
-                            value="E:\\codes\\py39\\test-20230416b\\todo-songs\\冬之花clip1.wav",
+                            value="E:\\MazenWork\\py39\\test\\mazen.wav",
                         )
                         f0method0 = gr.Radio(
                             label=i18n(
