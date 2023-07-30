@@ -2111,10 +2111,9 @@ with gr.Blocks(theme=gr.themes.Soft(primary_hue="emerald").set(
                         ],
                         info3,
                     )
-
-
-
-
+        with gr.TabItem("Model Manger مدير النماذح"):
+            gr.Markdown(value="TODO: Save Model to your PC")
+            gr.Markdown(value="TODO: Download Model From Google Drive")
 
     #region Mangio Preset Handler Region
     def save_preset(
