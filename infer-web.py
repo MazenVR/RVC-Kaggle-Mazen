@@ -1620,7 +1620,7 @@ def get_presets():
 
 with gr.Blocks(theme=gr.themes.Soft(primary_hue="emerald").set(
     button_primary_background_fill="*primary_100",
-    button_primary_background_fill_hover="*primary_150"), title="RVC By Mazen VR") as app:
+    button_primary_background_fill_hover="*primary_150"), title="RVC Mazen VR") as app:
     gr.HTML("<h1> RVC [Fork by Mazen VR] إستنساخ الصوت بالذكاء الإصطناعي </h1>")
     gr.Markdown(
         value="<b>https://www.youtube.com/@MohamedElmazen</b>"
