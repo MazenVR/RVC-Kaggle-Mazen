@@ -1618,11 +1618,11 @@ def get_presets():
     
     return preset_names
 
-with gr.Blocks(theme=gr.themes.Soft()) as app:
+with gr.Blocks(theme=gr.themes.Glass()) as app:
     gr.HTML("<h1> RVC [Fork by Mazen VR] </h1>")
     gr.Markdown(
         value=i18n(
-            "<b>https://www.youtube.com/@MohamedElmazen</b>.</b>."
+            "<b>https://www.youtube.com/@MohamedElmazen</b>"
         )
     )
     with gr.Tabs():
