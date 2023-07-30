@@ -1897,7 +1897,7 @@ with gr.Blocks(theme=gr.themes.Glass()) as app:
                 )
             )
             with gr.Row():
-                exp_dir1 = gr.Textbox(label=i18n("输入实验名"), value="mi-test")
+                exp_dir1 = gr.Textbox(label=i18n("输入实验名"), value="MazenTest")
                 sr2 = gr.Radio(
                     label=i18n("目标采样率"),
                     choices=["40k", "48k"],
