@@ -41,6 +41,10 @@ from train.process_ckpt import change_info, extract_small_model, merge, show_inf
 from vc_infer_pipeline import VC
 from sklearn.cluster import MiniBatchKMeans
 
+import subprocess
+
+from subprocess import Popen
+
 logging.getLogger("numba").setLevel(logging.WARNING)
 
 
@@ -1640,6 +1644,59 @@ def get_name():
         return sorted(audio_files)[0]
     else:
         return ''
+    
+def zip_downloader(model):
+    if not os.path.exists(f'./weights/{model}.pth'):
+        return {"__type__": "update"}, f'Make sure the Voice Name is correct. I could not find {model}.pth'
+    index_found = False
+    for file in os.listdir(f'./logs/{model}'):
+        if file.endswith('.index') and 'added' in file:
+            log_file = file
+            index_found = True
+    if index_found:
+        return [f'./weights/{model}.pth', f'./logs/{model}/{log_file}'], "Done"
+    else:
+        return f'./weights/{model}.pth', "Could not find Index file."
+
+
+def download_from_url(url, model):
+    if url == '':
+        return "URL cannot be left empty."
+    if model =='':
+        return "You need to name your model. For example: Mazen-Model"
+    url = url.strip()
+    zip_dirs = ["zips", "unzips"]
+    for directory in zip_dirs:
+        if os.path.exists(directory):
+            shutil.rmtree(directory)
+            os.makedirs("zips", exist_ok=True)
+            os.makedirs("unzips", exist_ok=True)
+            zipfile = model + '.zip'
+            zipfile_path = './zips/' + zipfile
+            try:
+                if "drive.google.com" in url:
+                    subprocess.run(["gdown", url, "--fuzzy", "-O", zipfile_path])
+                else:
+                    subprocess.run(["wget", url, "-O", zipfile_path])
+                for filename in os.listdir("./zips"):
+                    if filename.endswith(".zip"):
+                        zipfile_path = os.path.join("./zips/",filename)
+                        shutil.unpack_archive(zipfile_path, "./unzips", 'zip')
+                    else:
+                        return "No zipfile found."
+                for root, dirs, files in os.walk('./unzips'):
+                    for file in files:
+                        file_path = os.path.join(root, file)
+                        if file.endswith(".index"):
+                            os.mkdir(f'./logs/{model}')
+                            shutil.copy2(file_path,f'./logs/{model}')
+                        elif "G_" not in file and "D_" not in file and file.endswith(".pth"):
+                            shutil.copy(file_path,f'./weights/{model}.pth')
+                shutil.rmtree("zips")
+                shutil.rmtree("unzips")
+                return "Success."
+            except:
+                return "There's been an error."
 
 with gr.Blocks(theme=gr.themes.Soft(primary_hue="emerald").set(
     button_primary_background_fill="*primary_100",
@@ -2153,8 +2210,18 @@ with gr.Blocks(theme=gr.themes.Soft(primary_hue="emerald").set(
                         info3,
                     )
         with gr.TabItem("Model Manger مدير النماذج"):
-            gr.Markdown(value="TODO: Save Model to your PC")
-            gr.Markdown(value="TODO: Get Model From Google Drive")
+            with gr.Accordion("Index Settings", open=True):
+                gr.Markdown(value="Import model From URL")
+                with gr.Row():
+                    url=gr.Textbox(label="Enter Model URL:")
+                with gr.Row():
+                    model = gr.Textbox(label="Enter Model Name:")
+                    download_button=gr.Button("Download",  variant="primary")
+                with gr.Row():
+                    status_bar=gr.Textbox(label="")
+                    download_button.click(fn=download_from_url, inputs=[url, model], outputs=[status_bar])
+
+        
 
     #region Mangio Preset Handler Region
     def save_preset(
