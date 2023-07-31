@@ -2210,18 +2210,21 @@ with gr.Blocks(theme=gr.themes.Soft(primary_hue="emerald").set(
                         info3,
                     )
         with gr.TabItem("Model Manger مدير النماذج"):
-            with gr.Accordion("Index Settings", open=True):
-                gr.Markdown(value="Import model From URL")
-                with gr.Row():
+            with gr.Accordion("Import Model From URL", open=True):
+                # gr.Markdown(value="Import model From URL")
+                with gr.Column():
                     url=gr.Textbox(label="Enter Model URL:")
-                with gr.Row():
                     model = gr.Textbox(label="Enter Model Name:")
                     download_button=gr.Button("Download",  variant="primary")
-                with gr.Row():
                     status_bar=gr.Textbox(label="")
                     download_button.click(fn=download_from_url, inputs=[url, model], outputs=[status_bar])
-
-        
+            with gr.Accordion("Export Model", open=True):
+                with gr.Column():
+                    model_to_downlaod = gr.Textbox(label="Enter Model Name:")
+                    zipped_model = gr.Files(label='Your Model and Index file can be downloaded here:')
+                    status_bar=gr.Textbox(label="")
+                    zip_model = gr.Button('Download Model')
+                    zip_model.click(fn=zip_downloader, inputs=[model_to_downlaod], outputs=[zipped_model, status_bar])
 
     #region Mangio Preset Handler Region
     def save_preset(
