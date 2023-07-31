@@ -162,7 +162,7 @@ def vc_single(
     sid,
     input_audio_path,
     f0_up_key,
-    f0_file,
+    # f0_file,
     f0_method,
     file_index,
     file_index2,
@@ -222,7 +222,7 @@ def vc_single(
             version,
             protect,
             crepe_hop_length,
-            f0_file=f0_file,
+            # f0_file=f0_file,
         )
         if tgt_sr != resample_sr >= 16000:
             tgt_sr = resample_sr
@@ -1351,7 +1351,7 @@ def cli_infer(com):
         speaker_id,
         source_audio_path,
         transposition,
-        f0_file,
+        # f0_file,
         f0_method,
         feature_index_path,
         feature_index_path,
@@ -1674,9 +1674,9 @@ with gr.Blocks(theme=gr.themes.Soft(primary_hue="emerald").set(
                             label=i18n("输入待处理音频文件路径(默认是正确格式示例)"),
                             value="E:\\MazenWork\\py39\\test\\mazen.wav",
                         )
-                        # dropbox_audio = gr.File(label="Drop your audio here")
+                        dropbox_audio = gr.File(label="Drop your audio here")
                         # refresh_input_audio_button = gr.Button("Refresh", variant="primary", size='sm')
-                        # dropbox_audio.upload(fn=save_wav, inputs=dropbox_audio, outputs=input_audio0)
+                        dropbox_audio.upload(fn=save_wav, inputs=dropbox_audio, outputs=input_audio0)
                         f0method0 = gr.Radio(
                             label=i18n(
                                 "选择音高提取算法,输入歌声可用pm提速,harvest低音好但巨慢无比,crepe效果好但吃GPU"
@@ -1753,7 +1753,7 @@ with gr.Blocks(theme=gr.themes.Soft(primary_hue="emerald").set(
                             step=0.01,
                             interactive=True,
                         )
-                        f0_file = gr.File(label=i18n("F0曲线文件, 可选, 一行一个音高, 代替默认F0及升降调"))
+                        # f0_file = gr.File(label=i18n("F0曲线文件, 可选, 一行一个音高, 代替默认F0及升降调"))
                         but0 = gr.Button(i18n("转换"), variant="primary")
                         with gr.Column():
                             vc_output1 = gr.Textbox(label=i18n("输出信息"))
@@ -1764,7 +1764,7 @@ with gr.Blocks(theme=gr.themes.Soft(primary_hue="emerald").set(
                                 spk_item,
                                 input_audio0,
                                 vc_transform0,
-                                f0_file,
+                                # f0_file,
                                 f0method0,
                                 file_index1,
                                 file_index2,
@@ -1778,135 +1778,135 @@ with gr.Blocks(theme=gr.themes.Soft(primary_hue="emerald").set(
                             ],
                             [vc_output1, vc_output2],
                         )
-                        # sid0.change(
-                        #     fn=get_vc,
-                        #     inputs=[sid0, protect0],
-                        #     outputs=[spk_item, protect0],
-                        # )
-            with gr.Group():
-                gr.Markdown(
-                    value=i18n("批量转换, 输入待转换音频文件夹, 或上传多个音频文件, 在指定文件夹(默认opt)下输出转换的音频. ")
-                )
-                with gr.Row():
-                    with gr.Column():
-                        vc_transform1 = gr.Number(
-                            label=i18n("变调(整数, 半音数量, 升八度12降八度-12)"), value=0
+                        sid0.change(
+                            fn=get_vc,
+                            inputs=[sid0, protect0],
+                            outputs=[spk_item, protect0],
                         )
-                        opt_input = gr.Textbox(label=i18n("指定输出文件夹"), value="opt")
-                        f0method1 = gr.Radio(
-                            label=i18n(
-                                "选择音高提取算法,输入歌声可用pm提速,harvest低音好但巨慢无比,crepe效果好但吃GPU"
-                            ),
-                            choices=["pm", "harvest", "crepe", "rmvpe"],
-                            value="pm",
-                            interactive=True,
-                        )
-                        filter_radius1 = gr.Slider(
-                            minimum=0,
-                            maximum=7,
-                            label=i18n(">=3则使用对harvest音高识别的结果使用中值滤波，数值为滤波半径，使用可以削弱哑音"),
-                            value=3,
-                            step=1,
-                            interactive=True,
-                        )
-                    with gr.Column():
-                        file_index3 = gr.Textbox(
-                            label=i18n("特征检索库文件路径,为空则使用下拉的选择结果"),
-                            value="",
-                            interactive=True,
-                        )
-                        file_index4 = gr.Dropdown(
-                            label=i18n("自动检测index路径,下拉式选择(dropdown)"),
-                            choices=sorted(index_paths),
-                            interactive=True,
-                        )
-                        refresh_button.click(
-                            fn=lambda: change_choices()[1],
-                            inputs=[],
-                            outputs=file_index4,
-                        )
-                        # file_big_npy2 = gr.Textbox(
-                        #     label=i18n("特征文件路径"),
-                        #     value="E:\\codes\\py39\\vits_vc_gpu_train\\logs\\mi-test-1key\\total_fea.npy",
-                        #     interactive=True,
-                        # )
-                        index_rate2 = gr.Slider(
-                            minimum=0,
-                            maximum=1,
-                            label=i18n("检索特征占比"),
-                            value=1,
-                            interactive=True,
-                        )
-                    with gr.Column():
-                        resample_sr1 = gr.Slider(
-                            minimum=0,
-                            maximum=48000,
-                            label=i18n("后处理重采样至最终采样率，0为不进行重采样"),
-                            value=0,
-                            step=1,
-                            interactive=True,
-                        )
-                        rms_mix_rate1 = gr.Slider(
-                            minimum=0,
-                            maximum=1,
-                            label=i18n("输入源音量包络替换输出音量包络融合比例，越靠近1越使用输出包络"),
-                            value=1,
-                            interactive=True,
-                        )
-                        protect1 = gr.Slider(
-                            minimum=0,
-                            maximum=0.5,
-                            label=i18n(
-                                "保护清辅音和呼吸声，防止电音撕裂等artifact，拉满0.5不开启，调低加大保护力度但可能降低索引效果"
-                            ),
-                            value=0.33,
-                            step=0.01,
-                            interactive=True,
-                        )
-                    with gr.Column():
-                        dir_input = gr.Textbox(
-                            label=i18n("输入待处理音频文件夹路径(去文件管理器地址栏拷就行了)"),
-                            value="E:\codes\py39\\test-20230416b\\todo-songs",
-                        )
-                        inputs = gr.File(
-                            file_count="multiple", label=i18n("也可批量输入音频文件, 二选一, 优先读文件夹")
-                        )
-                    with gr.Row():
-                        format1 = gr.Radio(
-                            label=i18n("导出文件格式"),
-                            choices=["wav", "flac", "mp3", "m4a"],
-                            value="flac",
-                            interactive=True,
-                        )
-                        but1 = gr.Button(i18n("转换"), variant="primary")
-                        vc_output3 = gr.Textbox(label=i18n("输出信息"))
-                    but1.click(
-                        vc_multi,
-                        [
-                            spk_item,
-                            dir_input,
-                            opt_input,
-                            inputs,
-                            vc_transform1,
-                            f0method1,
-                            file_index3,
-                            file_index4,
-                            # file_big_npy2,
-                            index_rate2,
-                            filter_radius1,
-                            resample_sr1,
-                            rms_mix_rate1,
-                            protect1,
-                            format1,
-                            crepe_hop_length,
-                        ],
-                        [vc_output3],
-                    )
-            sid0.change(
-                fn=get_vc,
-                inputs=[sid0, protect0, protect1],
-                outputs=[spk_item, protect0, protect1],
-            )
+            # with gr.Group():
+            #     gr.Markdown(
+            #         value=i18n("批量转换, 输入待转换音频文件夹, 或上传多个音频文件, 在指定文件夹(默认opt)下输出转换的音频. ")
+            #     )
+            #     with gr.Row():
+            #         with gr.Column():
+            #             vc_transform1 = gr.Number(
+            #                 label=i18n("变调(整数, 半音数量, 升八度12降八度-12)"), value=0
+            #             )
+            #             opt_input = gr.Textbox(label=i18n("指定输出文件夹"), value="opt")
+            #             f0method1 = gr.Radio(
+            #                 label=i18n(
+            #                     "选择音高提取算法,输入歌声可用pm提速,harvest低音好但巨慢无比,crepe效果好但吃GPU"
+            #                 ),
+            #                 choices=["pm", "harvest", "crepe", "rmvpe"],
+            #                 value="pm",
+            #                 interactive=True,
+            #             )
+            #             filter_radius1 = gr.Slider(
+            #                 minimum=0,
+            #                 maximum=7,
+            #                 label=i18n(">=3则使用对harvest音高识别的结果使用中值滤波，数值为滤波半径，使用可以削弱哑音"),
+            #                 value=3,
+            #                 step=1,
+            #                 interactive=True,
+            #             )
+            #         with gr.Column():
+            #             file_index3 = gr.Textbox(
+            #                 label=i18n("特征检索库文件路径,为空则使用下拉的选择结果"),
+            #                 value="",
+            #                 interactive=True,
+            #             )
+            #             file_index4 = gr.Dropdown(
+            #                 label=i18n("自动检测index路径,下拉式选择(dropdown)"),
+            #                 choices=sorted(index_paths),
+            #                 interactive=True,
+            #             )
+            #             refresh_button.click(
+            #                 fn=lambda: change_choices()[1],
+            #                 inputs=[],
+            #                 outputs=file_index4,
+            #             )
+            #             # file_big_npy2 = gr.Textbox(
+            #             #     label=i18n("特征文件路径"),
+            #             #     value="E:\\codes\\py39\\vits_vc_gpu_train\\logs\\mi-test-1key\\total_fea.npy",
+            #             #     interactive=True,
+            #             # )
+            #             index_rate2 = gr.Slider(
+            #                 minimum=0,
+            #                 maximum=1,
+            #                 label=i18n("检索特征占比"),
+            #                 value=1,
+            #                 interactive=True,
+            #             )
+            #         with gr.Column():
+            #             resample_sr1 = gr.Slider(
+            #                 minimum=0,
+            #                 maximum=48000,
+            #                 label=i18n("后处理重采样至最终采样率，0为不进行重采样"),
+            #                 value=0,
+            #                 step=1,
+            #                 interactive=True,
+            #             )
+            #             rms_mix_rate1 = gr.Slider(
+            #                 minimum=0,
+            #                 maximum=1,
+            #                 label=i18n("输入源音量包络替换输出音量包络融合比例，越靠近1越使用输出包络"),
+            #                 value=1,
+            #                 interactive=True,
+            #             )
+            #             protect1 = gr.Slider(
+            #                 minimum=0,
+            #                 maximum=0.5,
+            #                 label=i18n(
+            #                     "保护清辅音和呼吸声，防止电音撕裂等artifact，拉满0.5不开启，调低加大保护力度但可能降低索引效果"
+            #                 ),
+            #                 value=0.33,
+            #                 step=0.01,
+            #                 interactive=True,
+            #             )
+            #         with gr.Column():
+            #             dir_input = gr.Textbox(
+            #                 label=i18n("输入待处理音频文件夹路径(去文件管理器地址栏拷就行了)"),
+            #                 value="E:\codes\py39\\test-20230416b\\todo-songs",
+            #             )
+            #             inputs = gr.File(
+            #                 file_count="multiple", label=i18n("也可批量输入音频文件, 二选一, 优先读文件夹")
+            #             )
+            #         with gr.Row():
+            #             format1 = gr.Radio(
+            #                 label=i18n("导出文件格式"),
+            #                 choices=["wav", "flac", "mp3", "m4a"],
+            #                 value="flac",
+            #                 interactive=True,
+            #             )
+            #             but1 = gr.Button(i18n("转换"), variant="primary")
+            #             vc_output3 = gr.Textbox(label=i18n("输出信息"))
+            #         but1.click(
+            #             vc_multi,
+            #             [
+            #                 spk_item,
+            #                 dir_input,
+            #                 opt_input,
+            #                 inputs,
+            #                 vc_transform1,
+            #                 f0method1,
+            #                 file_index3,
+            #                 file_index4,
+            #                 # file_big_npy2,
+            #                 index_rate2,
+            #                 filter_radius1,
+            #                 resample_sr1,
+            #                 rms_mix_rate1,
+            #                 protect1,
+            #                 format1,
+            #                 crepe_hop_length,
+            #             ],
+            #             [vc_output3],
+            #         )
+            # sid0.change(
+            #     fn=get_vc,
+            #     inputs=[sid0, protect0, protect1],
+            #     outputs=[spk_item, protect0, protect1],
+            # )
        
         with gr.TabItem(i18n("训练")):
             gr.Markdown(
@@ -2127,9 +2127,9 @@ with gr.Blocks(theme=gr.themes.Soft(primary_hue="emerald").set(
                         ],
                         info3,
                     )
-        with gr.TabItem("Model Manger مدير النماذح"):
+        with gr.TabItem("Model Manger مدير النماذج"):
             gr.Markdown(value="TODO: Save Model to your PC")
-            gr.Markdown(value="TODO: Download Model From Google Drive")
+            gr.Markdown(value="TODO: Get Model From Google Drive")
 
     #region Mangio Preset Handler Region
     def save_preset(
@@ -2146,7 +2146,7 @@ with gr.Blocks(theme=gr.themes.Soft(primary_hue="emerald").set(
         resample_sr,
         rms_mix_rate,
         protect,
-        f0_file
+        # f0_file
     ):
         data = None
         with open('../inference-presets.json', 'r') as file:
@@ -2165,7 +2165,7 @@ with gr.Blocks(theme=gr.themes.Soft(primary_hue="emerald").set(
             'resample': resample_sr,
             'volume_envelope': rms_mix_rate,
             'protect_voiceless': protect,
-            'f0_file_path': f0_file
+            'f0_file_path': "f0_file"
         }
         data['presets'].append(preset_json)
         with open('../inference-presets.json', 'w') as file:
