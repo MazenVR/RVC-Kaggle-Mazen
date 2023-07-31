@@ -1623,6 +1623,24 @@ def save_wav(audioFile):
     shutil.move(file_path,'./audios')
     return os.path.join('./audios',os.path.basename(file_path))
 
+def change_choices2():
+    audio_files=[]
+    for filename in os.listdir("./audios"):
+        if filename.endswith(('.wav','.mp3')):
+            audio_files.append(os.path.join('./audios',filename))
+    return {"choices": sorted(audio_files), "__type__": "update"}, {"__type__": "update"}
+    
+audio_files=[]
+for filename in os.listdir("./audios"):
+    if filename.endswith(('.wav','.mp3')):
+        audio_files.append(os.path.join('./audios',filename))
+
+def get_name():
+    if len(audio_files) > 0:
+        return sorted(audio_files)[0]
+    else:
+        return ''
+
 with gr.Blocks(theme=gr.themes.Soft(primary_hue="emerald").set(
     button_primary_background_fill="*primary_100",
     button_primary_background_fill_hover="*primary_150"), title="RVC Mazen VR") as app:
@@ -1674,9 +1692,16 @@ with gr.Blocks(theme=gr.themes.Soft(primary_hue="emerald").set(
                             label=i18n("输入待处理音频文件路径(默认是正确格式示例)"),
                             value="E:\\MazenWork\\py39\\test\\mazen.wav",
                         )
-                        dropbox_audio = gr.File(label="Drop your audio here")
-                        # refresh_input_audio_button = gr.Button("Refresh", variant="primary", size='sm')
-                        dropbox_audio.upload(fn=save_wav, inputs=dropbox_audio, outputs=input_audio0)
+                        # input_audio1 = gr.Dropdown(
+                        #     label="Choose your audio.",
+                        #     choices=audio_files
+                        #     )
+                        #dropbox_audio = gr.File(label="Drop your audio here")
+                        #refresh_input_audio_button = gr.Button("Refresh", variant="primary", size='sm')
+                        # dropbox_audio.upload(fn=save_wav, inputs=dropbox_audio, outputs=input_audio0)
+                        # dropbox_audio.upload(fn=change_choices2, inputs=[], outputs=[input_audio0])
+                        #input_audio1.change(fn=change_choices2, inputs=[], outputs=[input_audio0])
+                        #efresh_input_audio_button.click(fn=change_choices2, inputs=[], outputs=[])
                         f0method0 = gr.Radio(
                             label=i18n(
                                 "选择音高提取算法,输入歌声可用pm提速,harvest低音好但巨慢无比,crepe效果好但吃GPU"
