@@ -1618,6 +1618,11 @@ def get_presets():
     
     return preset_names
 
+def save_wav(audioFile):
+    file_path=audioFile.name
+    shutil.move(file_path,'./audios')
+    return os.path.join('./audios',os.path.basename(file_path))
+
 with gr.Blocks(theme=gr.themes.Soft(primary_hue="emerald").set(
     button_primary_background_fill="*primary_100",
     button_primary_background_fill_hover="*primary_150"), title="RVC Mazen VR") as app:
@@ -1657,6 +1662,9 @@ with gr.Blocks(theme=gr.themes.Soft(primary_hue="emerald").set(
                 gr.Markdown(
                     value=i18n("男转女推荐+12key, 女转男推荐-12key, 如果音域爆炸导致音色失真也可以自己调整到合适音域. ")
                 )
+                gr.Markdown(
+                    value="([صوت رجل إلى صوت إنثى +12] [صوت إنثى إلى صوت رجل -12] [0 لنفس النوع] قم بظبط القيمة حتى تصل إلى أقرب نتيجة)"
+                )
                 with gr.Row():
                     with gr.Column():
                         vc_transform0 = gr.Number(
@@ -1666,6 +1674,9 @@ with gr.Blocks(theme=gr.themes.Soft(primary_hue="emerald").set(
                             label=i18n("输入待处理音频文件路径(默认是正确格式示例)"),
                             value="E:\\MazenWork\\py39\\test\\mazen.wav",
                         )
+                        # dropbox_audio = gr.File(label="Drop your audio here")
+                        # refresh_input_audio_button = gr.Button("Refresh", variant="primary", size='sm')
+                        # dropbox_audio.upload(fn=save_wav, inputs=dropbox_audio, outputs=input_audio0)
                         f0method0 = gr.Radio(
                             label=i18n(
                                 "选择音高提取算法,输入歌声可用pm提速,harvest低音好但巨慢无比,crepe效果好但吃GPU"
@@ -1742,31 +1753,36 @@ with gr.Blocks(theme=gr.themes.Soft(primary_hue="emerald").set(
                             step=0.01,
                             interactive=True,
                         )
-                    f0_file = gr.File(label=i18n("F0曲线文件, 可选, 一行一个音高, 代替默认F0及升降调"))
-                    but0 = gr.Button(i18n("转换"), variant="primary")
-                    with gr.Row():
-                        vc_output1 = gr.Textbox(label=i18n("输出信息"))
-                        vc_output2 = gr.Audio(label=i18n("输出音频(右下角三个点,点了可以下载)"))
-                    but0.click(
-                        vc_single,
-                        [
-                            spk_item,
-                            input_audio0,
-                            vc_transform0,
-                            f0_file,
-                            f0method0,
-                            file_index1,
-                            file_index2,
-                            # file_big_npy1,
-                            index_rate1,
-                            filter_radius0,
-                            resample_sr0,
-                            rms_mix_rate0,
-                            protect0,
-                            crepe_hop_length
-                        ],
-                        [vc_output1, vc_output2],
-                    )
+                        f0_file = gr.File(label=i18n("F0曲线文件, 可选, 一行一个音高, 代替默认F0及升降调"))
+                        but0 = gr.Button(i18n("转换"), variant="primary")
+                        with gr.Column():
+                            vc_output1 = gr.Textbox(label=i18n("输出信息"))
+                            vc_output2 = gr.Audio(label=i18n("输出音频(右下角三个点,点了可以下载)"))
+                        but0.click(
+                            vc_single,
+                            [
+                                spk_item,
+                                input_audio0,
+                                vc_transform0,
+                                #f0_file,
+                                f0method0,
+                                file_index1,
+                                file_index2,
+                                # file_big_npy1,
+                                index_rate1,
+                                filter_radius0,
+                                resample_sr0,
+                                rms_mix_rate0,
+                                protect0,
+                                crepe_hop_length
+                            ],
+                            [vc_output1, vc_output2],
+                        )
+                        # sid0.change(
+                        #     fn=get_vc,
+                        #     inputs=[sid0, protect0],
+                        #     outputs=[spk_item, protect0],
+                        # )
             with gr.Group():
                 gr.Markdown(
                     value=i18n("批量转换, 输入待转换音频文件夹, 或上传多个音频文件, 在指定文件夹(默认opt)下输出转换的音频. ")
