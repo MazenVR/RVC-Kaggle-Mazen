@@ -1620,7 +1620,7 @@ def get_presets():
 
 def save_wav(audioFile):
     file_path=audioFile.name
-    shutil.move(file_path,'./audios')
+    shutil.copy2(file_path,'./audios')
     return os.path.join('./audios',os.path.basename(file_path))
 
 def change_choices2():
@@ -1696,12 +1696,12 @@ with gr.Blocks(theme=gr.themes.Soft(primary_hue="emerald").set(
                         #     label="Choose your audio.",
                         #     choices=audio_files
                         #     )
-                        #dropbox_audio = gr.File(label="Drop your audio here")
-                        #refresh_input_audio_button = gr.Button("Refresh", variant="primary", size='sm')
-                        # dropbox_audio.upload(fn=save_wav, inputs=dropbox_audio, outputs=input_audio0)
-                        # dropbox_audio.upload(fn=change_choices2, inputs=[], outputs=[input_audio0])
+                        dropbox_audio = gr.File(label="Drop your audio here")
+                        dropbox_audio.upload(fn=save_wav, inputs=dropbox_audio, outputs=input_audio0)
+                        #dropbox_audio.upload(fn=change_choices2, inputs=[], outputs=[input_audio0])
                         #input_audio1.change(fn=change_choices2, inputs=[], outputs=[input_audio0])
-                        #efresh_input_audio_button.click(fn=change_choices2, inputs=[], outputs=[])
+                        #refresh_audio_button = gr.Button("Refresh", variant="primary", size='sm')
+                        #efresh_audio_button.click(fn=change_choices2, inputs=[], outputs=[])
                         f0method0 = gr.Radio(
                             label=i18n(
                                 "选择音高提取算法,输入歌声可用pm提速,harvest低音好但巨慢无比,crepe效果好但吃GPU"
