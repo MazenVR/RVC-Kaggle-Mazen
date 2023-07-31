@@ -1764,7 +1764,7 @@ with gr.Blocks(theme=gr.themes.Soft(primary_hue="emerald").set(
                                 spk_item,
                                 input_audio0,
                                 vc_transform0,
-                                #f0_file,
+                                f0_file,
                                 f0method0,
                                 file_index1,
                                 file_index2,
