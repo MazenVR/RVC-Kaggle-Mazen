@@ -44,6 +44,7 @@ from sklearn.cluster import MiniBatchKMeans
 import subprocess
 
 from subprocess import Popen
+from mega import Mega
 
 logging.getLogger("numba").setLevel(logging.WARNING)
 
@@ -1663,40 +1664,43 @@ def download_from_url(url, model):
     if url == '':
         return "URL cannot be left empty."
     if model =='':
-        return "You need to name your model. For example: Mazen-Model"
+        return "You need to name your model. For example: My-Model"
     url = url.strip()
     zip_dirs = ["zips", "unzips"]
     for directory in zip_dirs:
         if os.path.exists(directory):
             shutil.rmtree(directory)
-            os.makedirs("zips", exist_ok=True)
-            os.makedirs("unzips", exist_ok=True)
-            zipfile = model + '.zip'
-            zipfile_path = './zips/' + zipfile
-            try:
-                if "drive.google.com" in url:
-                    subprocess.run(["gdown", url, "--fuzzy", "-O", zipfile_path])
-                else:
-                    subprocess.run(["wget", url, "-O", zipfile_path])
-                for filename in os.listdir("./zips"):
-                    if filename.endswith(".zip"):
-                        zipfile_path = os.path.join("./zips/",filename)
-                        shutil.unpack_archive(zipfile_path, "./unzips", 'zip')
-                    else:
-                        return "No zipfile found."
-                for root, dirs, files in os.walk('./unzips'):
-                    for file in files:
-                        file_path = os.path.join(root, file)
-                        if file.endswith(".index"):
-                            os.mkdir(f'./logs/{model}')
-                            shutil.copy2(file_path,f'./logs/{model}')
-                        elif "G_" not in file and "D_" not in file and file.endswith(".pth"):
-                            shutil.copy(file_path,f'./weights/{model}.pth')
-                shutil.rmtree("zips")
-                shutil.rmtree("unzips")
-                return "Success."
-            except:
-                return "There's been an error."
+    os.makedirs("zips", exist_ok=True)
+    os.makedirs("unzips", exist_ok=True)
+    zipfile = model + '.zip'
+    zipfile_path = './zips/' + zipfile
+    try:
+        if "drive.google.com" in url:
+            subprocess.run(["gdown", url, "--fuzzy", "-O", zipfile_path])
+        elif "mega.nz" in url:
+            m = Mega()
+            m.download_url(url, './zips')
+        else:
+            subprocess.run(["wget", url, "-O", zipfile_path])
+        for filename in os.listdir("./zips"):
+            if filename.endswith(".zip"):
+                zipfile_path = os.path.join("./zips/",filename)
+                shutil.unpack_archive(zipfile_path, "./unzips", 'zip')
+            else:
+                return "No zipfile found."
+        for root, dirs, files in os.walk('./unzips'):
+            for file in files:
+                file_path = os.path.join(root, file)
+                if file.endswith(".index"):
+                    os.mkdir(f'./logs/{model}')
+                    shutil.copy2(file_path,f'./logs/{model}')
+                elif "G_" not in file and "D_" not in file and file.endswith(".pth"):
+                    shutil.copy(file_path,f'./weights/{model}.pth')
+        shutil.rmtree("zips")
+        shutil.rmtree("unzips")
+        return "Success."
+    except:
+        return "There's been an error."
 
 with gr.Blocks(theme=gr.themes.Soft(primary_hue="emerald").set(
     button_primary_background_fill="*primary_100",
