@@ -1701,7 +1701,10 @@ def download_from_url(url, model):
         return "Success."
     except:
         return "There's been an error."
-
+    
+def getAudioFilePath(file):
+    return file
+    
 with gr.Blocks(theme=gr.themes.Soft(primary_hue="emerald").set(
     button_primary_background_fill="*primary_100",
     button_primary_background_fill_hover="*primary_150"), title="RVC Mazen VR") as app:
@@ -1757,12 +1760,12 @@ with gr.Blocks(theme=gr.themes.Soft(primary_hue="emerald").set(
                         #     label="Choose your audio.",
                         #     choices=audio_files
                         #     )
-                        dropbox_audio = gr.File(label="Drop your audio here")
+                        dropbox_audio = gr.File(label="Drop your audio here", show_progress=True)
                         dropbox_audio.upload(fn=save_wav, inputs=dropbox_audio, outputs=input_audio0)
                         #dropbox_audio.upload(fn=change_choices2, inputs=[], outputs=[input_audio0])
                         #input_audio1.change(fn=change_choices2, inputs=[], outputs=[input_audio0])
-                        #refresh_audio_button = gr.Button("Refresh", variant="primary", size='sm')
-                        #efresh_audio_button.click(fn=change_choices2, inputs=[], outputs=[])
+                        refresh_audio_button = gr.Button("Refresh", variant="primary", size='sm')
+                        refresh_audio_button.click(fn=getAudioFilePath, inputs=[dropbox_audio], outputs=input_audio0)
                         f0method0 = gr.Radio(
                             label=i18n(
                                 "选择音高提取算法,输入歌声可用pm提速,harvest低音好但巨慢无比,crepe效果好但吃GPU"
@@ -2214,21 +2217,26 @@ with gr.Blocks(theme=gr.themes.Soft(primary_hue="emerald").set(
                         info3,
                     )
         with gr.TabItem("Model Manger مدير النماذج"):
-            with gr.Accordion("Import Model From URL", open=True):
+            with gr.Accordion("Import Model From URL To Working Folder إستيراد نموذج من رابط لمجلد العمل", open=True):
                 # gr.Markdown(value="Import model From URL")
                 with gr.Column():
-                    url=gr.Textbox(label="Enter Model URL:")
-                    model = gr.Textbox(label="Enter Model Name:")
-                    download_button=gr.Button("Download",  variant="primary")
-                    status_bar=gr.Textbox(label="")
-                    download_button.click(fn=download_from_url, inputs=[url, model], outputs=[status_bar])
-            with gr.Accordion("Export Model", open=True):
+                    Help_bar_0=gr.Textbox(label="", value="Recommended to use MEGA for file uploading ننصح بإستخدام موقع ميجا لتحميل الملفات")
+                    url=gr.Textbox(label="Enter Model URL أدخل رابط النموذج:")
+                    model = gr.Textbox(label="Enter Model Name أدخل إسم النموذج:")
+                    download_button=gr.Button("Download Model تحميل النموذج",  variant="primary")
+                    status_bar_0=gr.Textbox(label="Log سجل النتائج")
+                    download_button.click(fn=download_from_url, inputs=[url, model], outputs=[status_bar_0])
+            with gr.Accordion("Export Model تصدير النموذج ", open=False):
                 with gr.Column():
-                    model_to_downlaod = gr.Textbox(label="Enter Model Name:")
-                    zipped_model = gr.Files(label='Your Model and Index file can be downloaded here:')
-                    status_bar=gr.Textbox(label="")
-                    zip_model = gr.Button('Download Model')
-                    zip_model.click(fn=zip_downloader, inputs=[model_to_downlaod], outputs=[zipped_model, status_bar])
+                    model_to_downlaod = gr.Textbox(label="Enter Model Name: أدخل إسم النموذج")
+                    zipped_model = gr.Files(label='Model and Index file can be downloaded here: النموذج والملف الفهرسي يمكن تحميلهم من هنا')
+                    status_bar_1=gr.Textbox(label="Log سجل النتائج")
+                    zip_model = gr.Button('Download Model تحميل النموذج')
+                    zip_model.click(fn=zip_downloader, inputs=[model_to_downlaod], outputs=[zipped_model, status_bar_1])
+            with gr.Accordion("Help مساعدة", open=False):
+                with gr.Column():
+                    Help_bar_1=gr.Textbox(label="", value="Recommended to use MEGA for file uploading ننصح بإستخدام موقع ميجا لتحميل الملفات")
+                    gr.Markdown(value="<b>https://mega.nz/</b>")
 
     #region Mangio Preset Handler Region
     def save_preset(
