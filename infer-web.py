@@ -1677,7 +1677,10 @@ def audio_downloader():
     for file in os.listdir('./opt'):
         if file.endswith('.wav') or file.endswith('.mp3'):
            aud_files_list.append(f'./opt/{file}')
-    return aud_files_list, 'Done'
+    if len(aud_files_list) > 0:
+        return aud_files_list, 'Done'
+    else:
+        return 'I could not find any audio file'
 
 def download_from_url(url, model):
     if url == '':
