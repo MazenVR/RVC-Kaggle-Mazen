@@ -327,85 +327,96 @@ def vc_multi(
     except:
         yield traceback.format_exc()
 
+def save_wav_for_vocal(audioFile):
+    file_path=audioFile[0].name
+    shutil.copy2(file_path,'./audios_user')
+    return os.path.join('./audios_user',os.path.basename(file_path))
 
 def uvr(model_name, inp_root, save_root_vocal, paths, save_root_ins, agg, format0):
     infos = []
-    try:
-        inp_root = inp_root.strip(" ").strip('"').strip("\n").strip('"').strip(" ")
-        save_root_vocal = (
-            save_root_vocal.strip(" ").strip('"').strip("\n").strip('"').strip(" ")
-        )
-        save_root_ins = (
-            save_root_ins.strip(" ").strip('"').strip("\n").strip('"').strip(" ")
-        )
-        if model_name == "onnx_dereverb_By_FoxJoy":
-            pre_fun = MDXNetDereverb(15)
-        else:
-            func = _audio_pre_ if "DeEcho" not in model_name else _audio_pre_new
-            pre_fun = func(
-                agg=int(agg),
-                model_path=os.path.join(weight_uvr5_root, model_name + ".pth"),
-                device=config.device,
-                is_half=config.is_half,
-            )
-        if inp_root != "":
-            paths = [os.path.join(inp_root, name) for name in os.listdir(inp_root)]
-        else:
-            paths = [path.name for path in paths]
-        for path in paths:
-            inp_path = os.path.join(inp_root, path)
-            need_reformat = 1
-            done = 0
-            try:
-                info = ffmpeg.probe(inp_path, cmd="ffprobe")
-                if (
-                    info["streams"][0]["channels"] == 2
-                    and info["streams"][0]["sample_rate"] == "44100"
-                ):
-                    need_reformat = 0
-                    pre_fun._path_audio_(
-                        inp_path, save_root_ins, save_root_vocal, format0
-                    )
-                    done = 1
-            except:
-                need_reformat = 1
-                traceback.print_exc()
-            if need_reformat == 1:
-                tmp_path = "%s/%s.reformatted.wav" % (tmp, os.path.basename(inp_path))
-                os.system(
-                    "ffmpeg -i %s -vn -acodec pcm_s16le -ac 2 -ar 44100 %s -y"
-                    % (inp_path, tmp_path)
-                )
-                inp_path = tmp_path
-            try:
-                if done == 0:
-                    pre_fun._path_audio_(
-                        inp_path, save_root_ins, save_root_vocal, format0
-                    )
-                infos.append("%s->Success" % (os.path.basename(inp_path)))
-                yield "\n".join(infos)
-            except:
-                infos.append(
-                    "%s->%s" % (os.path.basename(inp_path), traceback.format_exc())
-                )
-                yield "\n".join(infos)
-    except:
-        infos.append(traceback.format_exc())
-        yield "\n".join(infos)
-    finally:
+    if inp_root != "":
         try:
+            inp_root = inp_root.strip(" ").strip('"').strip("\n").strip('"').strip(" ")
+            save_root_vocal = (
+                save_root_vocal.strip(" ").strip('"').strip("\n").strip('"').strip(" ")
+            )
+            save_root_ins = (
+                save_root_ins.strip(" ").strip('"').strip("\n").strip('"').strip(" ")
+            )
             if model_name == "onnx_dereverb_By_FoxJoy":
-                del pre_fun.pred.model
-                del pre_fun.pred.model_
+                pre_fun = MDXNetDereverb(15)
             else:
-                del pre_fun.model
-                del pre_fun
+                func = _audio_pre_ if "DeEcho" not in model_name else _audio_pre_new
+                pre_fun = func(
+                    agg=int(agg),
+                    model_path=os.path.join(weight_uvr5_root, model_name + ".pth"),
+                    device=config.device,
+                    is_half=config.is_half,
+                )
+            if inp_root != "":
+                # paths = [os.path.join(inp_root, name) for name in os.listdir(inp_root)]
+                paths[0] = inp_root
+                print(paths[0])
+            else:
+                # paths = [path.name for path in paths]
+                paths[0] = inp_root
+            for path in paths:
+                # inp_path = os.path.join(inp_root, path)
+                inp_path = inp_root
+                need_reformat = 1
+                done = 0
+                try:
+                    info = ffmpeg.probe(inp_path, cmd="ffprobe")
+                    if (
+                        info["streams"][0]["channels"] == 2
+                        and info["streams"][0]["sample_rate"] == "44100"
+                    ):
+                        need_reformat = 0
+                        pre_fun._path_audio_(
+                            inp_path, save_root_ins, save_root_vocal, format0
+                        )
+                        done = 1
+                except:
+                    need_reformat = 1
+                    traceback.print_exc()
+                if need_reformat == 1:
+                    tmp_path = "%s/%s.reformatted.wav" % (tmp, os.path.basename(inp_path))
+                    os.system(
+                        "ffmpeg -i %s -vn -acodec pcm_s16le -ac 2 -ar 44100 %s -y"
+                        % (inp_path, tmp_path)
+                    )
+                    inp_path = tmp_path
+                try:
+                    if done == 0:
+                        pre_fun._path_audio_(
+                            inp_path, save_root_ins, save_root_vocal, format0
+                        )
+                    infos.append("%s->Success" % (os.path.basename(inp_path)))
+                    yield "\n".join(infos)
+                except:
+                    infos.append(
+                        "%s->%s" % (os.path.basename(inp_path), traceback.format_exc())
+                    )
+                    yield "\n".join(infos)
         except:
-            traceback.print_exc()
-        print("clean_empty_cache")
-        if torch.cuda.is_available():
-            torch.cuda.empty_cache()
-    yield "\n".join(infos)
+            infos.append(traceback.format_exc())
+            yield "\n".join(infos)
+        finally:
+            try:
+                if model_name == "onnx_dereverb_By_FoxJoy":
+                    del pre_fun.pred.model
+                    del pre_fun.pred.model_
+                else:
+                    del pre_fun.model
+                    del pre_fun
+            except:
+                traceback.print_exc()
+            print("clean_empty_cache")
+            if torch.cuda.is_available():
+                torch.cuda.empty_cache()
+        yield "\n".join(infos)
+    else:
+        yield "No audio file uplaoded!!"
 
 
 # 一个选项卡全局只能有一个音色
@@ -2002,12 +2013,15 @@ with gr.Blocks(theme=gr.themes.Soft(primary_hue="emerald").set(
                 with gr.Row():
                     with gr.Column():
                         dir_wav_input = gr.Textbox(
-                            label=i18n("输入待处理音频文件夹路径"),
+                            label="",
                             value="",
+                            visible=True,
+                            interactive=False
                         )
                         wav_inputs = gr.File(
-                            file_count="multiple", label=i18n("也可批量输入音频文件, 二选一, 优先读文件夹")
+                            file_count="multiple", label=i18n("也可批量输入音频文件, 二选一, 优先读文件夹"), show_progress=True
                         )
+                        wav_inputs.upload(fn=save_wav_for_vocal, show_progress=True, inputs=wav_inputs, outputs=dir_wav_input)
                     with gr.Column():
                         model_choose = gr.Dropdown(label=i18n("模型"), choices=uvr5_names, value="HP5_only_main_vocal")
                         agg = gr.Slider(
@@ -2020,10 +2034,12 @@ with gr.Blocks(theme=gr.themes.Soft(primary_hue="emerald").set(
                             visible=False,  # 先不开放调整
                         )
                         opt_vocal_root = gr.Textbox(
-                            label=i18n("指定输出主人声文件夹"), value="opt"
+                            label=i18n("指定输出主人声文件夹"), value="opt",
+                            visible=False
                         )
                         opt_ins_root = gr.Textbox(
-                            label=i18n("指定输出非主人声文件夹"), value="opt"
+                            label=i18n("指定输出非主人声文件夹"), value="opt",
+                            visible=False
                         )
                         format0 = gr.Radio(
                             label=i18n("导出文件格式"),
