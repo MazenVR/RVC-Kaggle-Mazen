@@ -1686,7 +1686,7 @@ def download_from_url(url, model):
     if url == '':
         return "URL cannot be left empty."
     if model =='':
-        return "You need to name your model. For example: My-Model"
+        return "You need to name your model. For example: Mazen-Model"
     url = url.strip()
     zip_dirs = ["zips", "unzips"]
     for directory in zip_dirs:
@@ -1730,13 +1730,13 @@ def getAudioFilePath(file):
 with gr.Blocks(theme=gr.themes.Soft(primary_hue="emerald").set(
     button_primary_background_fill="*primary_100",
     button_primary_background_fill_hover="*primary_150"), title="RVC Mazen VR") as app:
-    gr.HTML("<h1> RVC [Fork by Mazen VR] إستنساخ الصوت بالذكاء الإصطناعي </h1>")
-    gr.Markdown(
-        value="<b>https://www.youtube.com/@MohamedElmazen</b>"
-    )
-    gr.Markdown(
-        value="<b>Discord https://discord.gg/BXxagtuM38</b>"
-    )
+    gr.HTML("<h1> <center> RVC [Fork by Mazen VR] إستنساخ الصوت بالذكاء الإصطناعي </center></h1>")
+    # gr.Markdown(
+    #     value="<b>https://www.youtube.com/@MohamedElmazen</b>"
+    # )
+    # gr.Markdown(
+    #     value="<b>Discord https://discord.gg/BXxagtuM38</b>"
+    # )
     with gr.Tabs():
         with gr.TabItem(i18n("模型推理")):
             # Inference Preset Row
@@ -2320,6 +2320,13 @@ with gr.Blocks(theme=gr.themes.Soft(primary_hue="emerald").set(
                 with gr.Column():
                     Help_bar_1=gr.Textbox(label="", value="Recommended to use MEGA for file uploading ننصح بإستخدام موقع ميجا لتحميل الملفات")
                     gr.Markdown(value="<b>https://mega.nz/</b>")
+    
+    gr.Markdown(
+        value="<b>https://www.youtube.com/@MohamedElmazen</b>"
+    )
+    gr.Markdown(
+        value="<b>Discord https://discord.gg/BXxagtuM38</b>"
+    )
 
     #region Mangio Preset Handler Region
     def save_preset(
