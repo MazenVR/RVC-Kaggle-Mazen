@@ -1764,7 +1764,7 @@ with gr.Blocks(theme=gr.themes.Soft(primary_hue="emerald").set(
                         dropbox_audio.upload(fn=save_wav, inputs=dropbox_audio, outputs=input_audio0)
                         #dropbox_audio.upload(fn=change_choices2, inputs=[], outputs=[input_audio0])
                         #input_audio1.change(fn=change_choices2, inputs=[], outputs=[input_audio0])
-                        refresh_audio_button = gr.Button("Refresh", variant="primary", size='sm')
+                        #refresh_audio_button = gr.Button("Refresh", variant="primary", size='sm')
                         #refresh_audio_button.click(fn=getAudioFilePath, inputs=[dropbox_audio], outputs=input_audio0)
                         f0method0 = gr.Radio(
                             label=i18n(
