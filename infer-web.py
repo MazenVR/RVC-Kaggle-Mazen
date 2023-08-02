@@ -1669,7 +1669,15 @@ def zip_downloader(model):
         return [f'./weights/{model}.pth', f'./logs/{model}/{log_file}'], "Done"
     else:
         return f'./weights/{model}.pth', "Could not find Index file."
-
+    
+def audio_downloader():
+    aud_files_list=[]
+    if not os.path.exists(f'./opt'):
+        return 'I could not find any audio file'
+    for file in os.listdir('./opt'):
+        if file.endswith('.wav') or file.endswith('.mp3'):
+           aud_files_list.append(f'./opt/{file}')
+    return aud_files_list, 'Done'
 
 def download_from_url(url, model):
     if url == '':
@@ -2043,7 +2051,7 @@ with gr.Blocks(theme=gr.themes.Soft(primary_hue="emerald").set(
                         )
                         format0 = gr.Radio(
                             label=i18n("导出文件格式"),
-                            choices=["wav", "flac", "mp3", "m4a"],
+                            choices=["wav", "mp3"],
                             value="wav",
                             interactive=True,
                         )
@@ -2061,7 +2069,13 @@ with gr.Blocks(theme=gr.themes.Soft(primary_hue="emerald").set(
                             format0,
                         ],
                         [vc_output4],
-                    )        
+                    )
+            with gr.Accordion("Download Audio Files تحميل ملفات الصوت ", open=False):
+                with gr.Column():
+                    aud_files = gr.Files(label='Audio files can be downloaded here: ملفات الصوت يمكن تحميلها من هنا')
+                    status_bar_3=gr.Textbox(label="Log سجل النتائج")
+                    aud_files_button = gr.Button('Download Audio Files تحميل ملفات الصوت', variant="primary")
+                    aud_files_button.click(fn=audio_downloader, inputs=[], outputs=[aud_files, status_bar_3])   
        
         with gr.TabItem(i18n("训练")):
             gr.Markdown(
@@ -2297,7 +2311,7 @@ with gr.Blocks(theme=gr.themes.Soft(primary_hue="emerald").set(
                     model_to_downlaod = gr.Textbox(label="Enter Model Name: أدخل إسم النموذج")
                     zipped_model = gr.Files(label='Model and Index file can be downloaded here: النموذج والملف الفهرسي يمكن تحميلهم من هنا')
                     status_bar_1=gr.Textbox(label="Log سجل النتائج")
-                    zip_model = gr.Button('Download Model تحميل النموذج')
+                    zip_model = gr.Button('Download Model تحميل النموذج', variant="primary")
                     zip_model.click(fn=zip_downloader, inputs=[model_to_downlaod], outputs=[zipped_model, status_bar_1])
             with gr.Accordion("Help مساعدة", open=False):
                 with gr.Column():
