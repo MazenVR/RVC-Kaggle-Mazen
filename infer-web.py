@@ -2021,7 +2021,7 @@ with gr.Blocks(theme=gr.themes.Soft(primary_hue="emerald").set(
                         wav_inputs = gr.File(
                             file_count="multiple", label=i18n("也可批量输入音频文件, 二选一, 优先读文件夹"), show_progress=True
                         )
-                        wav_inputs.upload(fn=save_wav_for_vocal, show_progress=True, inputs=wav_inputs, outputs=dir_wav_input, show_progress=True)
+                        wav_inputs.upload(fn=save_wav_for_vocal, inputs=wav_inputs, outputs=dir_wav_input, show_progress=True)
                     with gr.Column():
                         model_choose = gr.Dropdown(label=i18n("模型"), choices=uvr5_names, value="HP5_only_main_vocal")
                         agg = gr.Slider(
