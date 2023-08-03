@@ -912,7 +912,7 @@ def click_train(
     print(cmd)
     p = Popen(cmd, shell=True, cwd=now_dir)
     p.wait()
-    return "训练结束, You can view the console training log or train.log under the experiment folder"
+    return "Training Done تم الأنتهاء من التدريب"
 
 
 # but4.click(train_index, [exp_dir1], info3)
@@ -1727,7 +1727,7 @@ def download_from_url(url, model):
 def getAudioFilePath(file):
     return file
     
-with gr.Blocks(theme=gr.themes.Soft(primary_hue="emerald").set(
+with gr.Blocks(theme=gr.themes.Soft(primary_hue="sky").set(
     button_primary_background_fill="*primary_100",
     button_primary_background_fill_hover="*primary_150"), title="RVC Mazen VR") as app:
     gr.HTML("<h1> <center> RVC [Fork by Mazen VR] إستنساخ الصوت بالذكاء الإصطناعي </center></h1>")
@@ -1792,7 +1792,7 @@ with gr.Blocks(theme=gr.themes.Soft(primary_hue="emerald").set(
                             label=i18n(
                                 "选择音高提取算法,输入歌声可用pm提速,harvest低音好但巨慢无比,crepe效果好但吃GPU"
                             ),
-                            choices=["pm", "harvest", "dio", "crepe", "crepe-tiny", "mangio-crepe", "mangio-crepe-tiny", "rmvpe"], # Fork Feature. Add Crepe-Tiny
+                            choices=["pm", "harvest", "dio"], # Fork Feature. Add Crepe-Tiny
                             value="pm",
                             interactive=True,
                         )
@@ -1802,7 +1802,8 @@ with gr.Blocks(theme=gr.themes.Soft(primary_hue="emerald").set(
                             step=1,
                             label=i18n("crepe_hop_length"),
                             value=120,
-                            interactive=True
+                            interactive=True,
+                            visible=False
                         )
                         filter_radius0 = gr.Slider(
                             minimum=0,
@@ -1817,6 +1818,7 @@ with gr.Blocks(theme=gr.themes.Soft(primary_hue="emerald").set(
                             label=i18n("特征检索库文件路径,为空则使用下拉的选择结果"),
                             value="",
                             interactive=True,
+                            visible=False
                         )
                         file_index2 = gr.Dropdown(
                             label=i18n("自动检测index路径,下拉式选择(dropdown)"),
@@ -1835,7 +1837,7 @@ with gr.Blocks(theme=gr.themes.Soft(primary_hue="emerald").set(
                             minimum=0,
                             maximum=1,
                             label=i18n("检索特征占比"),
-                            value=0.75,
+                            value=0.60,
                             interactive=True,
                         )
                     with gr.Column():
@@ -1846,6 +1848,7 @@ with gr.Blocks(theme=gr.themes.Soft(primary_hue="emerald").set(
                             value=0,
                             step=1,
                             interactive=True,
+                            visible=False
                         )
                         rms_mix_rate0 = gr.Slider(
                             minimum=0,
@@ -1853,6 +1856,7 @@ with gr.Blocks(theme=gr.themes.Soft(primary_hue="emerald").set(
                             label=i18n("输入源音量包络替换输出音量包络融合比例，越靠近1越使用输出包络"),
                             value=0.25,
                             interactive=True,
+                            visible=False
                         )
                         protect0 = gr.Slider(
                             minimum=0,
@@ -2073,7 +2077,7 @@ with gr.Blocks(theme=gr.themes.Soft(primary_hue="emerald").set(
                         ],
                         [vc_output4],
                     )
-            with gr.Accordion("Download Audio Files تحميل ملفات الصوت ", open=False):
+            with gr.Accordion("Download Audio Files تحميل ملفات الصوت ", open=True):
                 with gr.Column():
                     aud_files = gr.Files(label='Audio files can be downloaded here: ملفات الصوت يمكن تحميلها من هنا')
                     status_bar_3=gr.Textbox(label="Log سجل النتائج")
@@ -2093,19 +2097,21 @@ with gr.Blocks(theme=gr.themes.Soft(primary_hue="emerald").set(
                     choices=["40k", "48k"],
                     value="40k",
                     interactive=True,
+                    visible=False
                 )
                 if_f0_3 = gr.Radio(
                     label=i18n("模型是否带音高指导(唱歌一定要, 语音可以不要)"),
                     choices=[True, False],
                     value=True,
                     interactive=True,
+                    visible=False
                 )
                 version19 = gr.Radio(
                     label=i18n("版本"),
                     choices=["v2"],
                     value="v2",
                     interactive=True,
-                    visible=True,
+                    visible=False,
                 )
                 np7 = gr.Slider(
                     minimum=0,
@@ -2132,6 +2138,7 @@ with gr.Blocks(theme=gr.themes.Soft(primary_hue="emerald").set(
                         label=i18n("请指定说话人id"),
                         value=0,
                         interactive=True,
+                        visible=True
                     )
                     but1 = gr.Button(i18n("处理数据"), variant="primary")
                     info1 = gr.Textbox(label=i18n("输出信息"), value="")
@@ -2153,7 +2160,7 @@ with gr.Blocks(theme=gr.themes.Soft(primary_hue="emerald").set(
                             label=i18n(
                                 "选择音高提取算法:输入歌声可用pm提速,高质量语音但CPU差可用dio提速,harvest质量更好但慢"
                             ),
-                            choices=["pm", "harvest", "dio", "crepe", "mangio-crepe"], # Fork feature: Crepe on f0 extraction for training.
+                            choices=["pm", "harvest", "dio"], # Fork feature: Crepe on f0 extraction for training.
                             value="harvest",
                             interactive=True,
                         )
@@ -2163,7 +2170,8 @@ with gr.Blocks(theme=gr.themes.Soft(primary_hue="emerald").set(
                             step=1,
                             label=i18n("crepe_hop_length"),
                             value=64,
-                            interactive=True
+                            interactive=True,
+                            visible=False
                         )
                     but2 = gr.Button(i18n("特征提取"), variant="primary")
                     info2 = gr.Textbox(label=i18n("输出信息"), value="", max_lines=8)
@@ -2180,7 +2188,7 @@ with gr.Blocks(theme=gr.themes.Soft(primary_hue="emerald").set(
                         maximum=50,
                         step=1,
                         label=i18n("保存频率save_every_epoch"),
-                        value=20,
+                        value=50,
                         interactive=True,
                     )
                     total_epoch11 = gr.Slider(
@@ -2212,13 +2220,16 @@ with gr.Blocks(theme=gr.themes.Soft(primary_hue="emerald").set(
                         choices=[i18n("是"), i18n("否")],
                         value=i18n("否"),
                         interactive=True,
+                        visible=False
                     )
                     if_save_every_weights18 = gr.Radio(
                         label=i18n("是否在每次保存时间点将最终小模型保存至weights文件夹"),
                         choices=[i18n("是"), i18n("否")],
-                        value=i18n("是"),
+                        value=i18n("否"),
                         interactive=True,
                     )
+                with gr.Row():
+                    gr.Markdown("Step 4: Train Model first, and after that Train index features")
                 with gr.Row():
                     pretrained_G14 = gr.Textbox(
                         label=i18n("加载预训练底模G路径"),
@@ -2252,7 +2263,7 @@ with gr.Blocks(theme=gr.themes.Soft(primary_hue="emerald").set(
                     )
                     but3 = gr.Button(i18n("训练模型"), variant="primary")
                     but4 = gr.Button(i18n("训练特征索引"), variant="primary")
-                    but5 = gr.Button(i18n("一键训练"), variant="primary")
+                    but5 = gr.Button(i18n("一键训练"), variant="primary", visible=False)
                     info3 = gr.Textbox(label=i18n("输出信息"), value="", max_lines=10)
                     but3.click(
                         click_train,
