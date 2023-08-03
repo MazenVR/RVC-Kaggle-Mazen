@@ -1713,11 +1713,7 @@ def download_from_url(url, model):
         for filename in os.listdir("./zips"):
             if filename.endswith(".zip"):
                 zipfile_path = os.path.join("./zips/",filename)
-                #shutil.unpack_archive(zipfile_path, "./unzips", 'zip')
-                print(zipfile_path)
-                with zipfile(zipfile_path, 'r') as zObject:
-                    print(zObject.printdir())
-                    zObject.extractall(zipfile_path)
+                shutil.unpack_archive(zipfile_path, "./unzips", 'zip')
             else:
                 return "No zipfile found."
         for root, dirs, files in os.walk('./unzips'):
