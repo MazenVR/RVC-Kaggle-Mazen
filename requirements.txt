@@ -46,5 +46,3 @@ torchcrepe==0.0.20
 fastapi==0.88
 mega.py
 gdown
-pysimplegui
-sounddevice
