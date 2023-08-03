@@ -1661,12 +1661,17 @@ def zip_downloader(model):
     if not os.path.exists(f'./weights/{model}.pth'):
         return {"__type__": "update"}, f'Make sure the Voice Name is correct. I could not find {model}.pth'
     index_found = False
+    MODEL_EPOCH = 0
     for file in os.listdir(f'./logs/{model}'):
         if file.endswith('.index') and 'added' in file:
             log_file = file
             index_found = True
+        if file.startswith('G_') and '.pth' in file:
+            g_file = file.split("_")
+            g_file_1 = g_file[1].split(".")
+            MODEL_EPOCH = g_file_1[0]
     if index_found:
-        return [f'./weights/{model}.pth', f'./logs/{model}/{log_file}'], "Done"
+        return [f'./weights/{model}.pth', f'./logs/{model}/{log_file}', f'./logs/{model}/total_fea.npy', f'./logs/{model}/G_{MODEL_EPOCH}.pth', f'./logs/{model}/D_{MODEL_EPOCH}.pth'], "Done"
     else:
         return f'./weights/{model}.pth', "Could not find Index file."
     
@@ -1689,6 +1694,7 @@ def download_from_url(url, model):
         return "You need to name your model. For example: Mazen-Model"
     url = url.strip()
     zip_dirs = ["zips", "unzips"]
+    # MODEL_EPOCH = 0
     for directory in zip_dirs:
         if os.path.exists(directory):
             shutil.rmtree(directory)
@@ -1718,6 +1724,14 @@ def download_from_url(url, model):
                     shutil.copy2(file_path,f'./logs/{model}')
                 elif "G_" not in file and "D_" not in file and file.endswith(".pth"):
                     shutil.copy(file_path,f'./weights/{model}.pth')
+                # if file.startswith('G_') and '.pth' in file:
+                #     g_file = file.split("_")
+                #     g_file_1 = g_file[1].split(".")
+                #     MODEL_EPOCH = g_file_1[0]
+                #     shutil.copy(file_path,f'./logs/{model}/G_{MODEL_EPOCH}.pth')
+                #     shutil.copy(file_path,f'./logs/{model}/D_{MODEL_EPOCH}.pth')
+                #     shutil.copy(file_path,f'./logs/{model}/total_fea.npy')
+                
         shutil.rmtree("zips")
         shutil.rmtree("unzips")
         return "Success."
