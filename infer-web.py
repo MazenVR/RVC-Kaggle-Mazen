@@ -2099,6 +2099,7 @@ with gr.Blocks(theme=gr.themes.Soft(primary_hue="sky").set(
                             choices=["wav", "mp3"],
                             value="wav",
                             interactive=True,
+                            visible=False
                         )
                     but2 = gr.Button(i18n("转换"), variant="primary")
                     vc_output4 = gr.Textbox(label=i18n("输出信息"))
