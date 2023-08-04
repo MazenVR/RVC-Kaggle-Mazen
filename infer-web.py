@@ -2067,7 +2067,7 @@ with gr.Blocks(theme=gr.themes.Soft(primary_hue="sky").set(
                         )
                         wav_inputs.upload(fn=save_wav_for_vocal, inputs=wav_inputs, outputs=dir_wav_input, show_progress=True)
                     with gr.Column():
-                        model_choose = gr.Dropdown(label=i18n("模型"), choices=uvr5_names, value="HP5_only_main_vocal")
+                        model_choose = gr.Dropdown(label=i18n("模型"), choices=uvr5_names, value="HP5_only_main_vocal", visible=False)
                         agg = gr.Slider(
                             minimum=0,
                             maximum=20,
