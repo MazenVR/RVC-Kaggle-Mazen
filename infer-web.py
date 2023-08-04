@@ -1692,6 +1692,8 @@ def download_from_url(url, model):
         return "URL cannot be left empty."
     if model =='':
         return "You need to name your model. For example: Mazen-Model"
+    url_full = f'https://drive.google.com/uc?id={url}'
+    url = url_full
     url = url.strip()
     zip_dirs = ["zips", "unzips"]
     for directory in zip_dirs:
@@ -2327,12 +2329,12 @@ with gr.Blocks(theme=gr.themes.Soft(primary_hue="sky").set(
             with gr.Accordion("Import Model From URL To Working Folder إستيراد نموذج من رابط لمجلد العمل", open=True):
                 # gr.Markdown(value="Import model From URL")
                 with gr.Column():
-                    Help_bar_0=gr.Textbox(label="", value="Recommended to use MEGA for file uploading ننصح بإستخدام موقع ميجا لتحميل الملفات")
-                    url=gr.Textbox(label="Enter Model URL أدخل رابط النموذج:")
-                    model = gr.Textbox(label="Enter Model Name أدخل إسم النموذج:")
-                    download_button=gr.Button("Download Model تحميل النموذج",  variant="primary")
+                    Help_bar_0=gr.Textbox(label="", value="Import From Google Drive")
+                    gdrive_file_ID=gr.Textbox(label="Enter Google Drive File ID")
+                    model = gr.Textbox(label="Enter Model Name (Name must be as model saved name)")
+                    download_button=gr.Button("Download Model",  variant="primary")
                     status_bar_0=gr.Textbox(label="Log سجل النتائج")
-                    download_button.click(fn=download_from_url, inputs=[url, model], outputs=[status_bar_0])
+                    download_button.click(fn=download_from_url, inputs=[gdrive_file_ID, model], outputs=[status_bar_0])
             with gr.Accordion("Export Model تصدير النموذج ", open=False):
                 with gr.Column():
                     model_to_downlaod = gr.Textbox(label="Enter Model Name: أدخل إسم النموذج")
@@ -2340,7 +2342,7 @@ with gr.Blocks(theme=gr.themes.Soft(primary_hue="sky").set(
                     status_bar_1=gr.Textbox(label="Log سجل النتائج")
                     zip_model = gr.Button('Download Model تحميل النموذج', variant="primary")
                     zip_model.click(fn=zip_downloader, inputs=[model_to_downlaod], outputs=[zipped_model, status_bar_1])
-            with gr.Accordion("Help مساعدة", open=False):
+            with gr.Accordion("Help مساعدة", open=False, visible=False):
                 with gr.Column():
                     Help_bar_1=gr.Textbox(label="", value="Recommended to use MEGA for file uploading ننصح بإستخدام موقع ميجا لتحميل الملفات")
                     gr.Markdown(value="<b>https://mega.nz/</b>")
