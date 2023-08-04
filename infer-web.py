@@ -1717,10 +1717,18 @@ def download_from_url(url, model):
                 return "No zipfile found."
         for root, dirs, files in os.walk('./unzips'):
             for file in files:
+                print(files)
                 file_path = os.path.join(root, file)
                 if file.endswith(".index"):
-                    os.mkdir(f'./logs/{model}')
-                    shutil.copy2(file_path,f'./logs/{model}')
+                    os.makedirs(f'./logs/{model}', exist_ok=True)
+                    shutil.copy(file_path,f'./logs/{model}')
+                    shutil.copy(file_path,f'./logs/{model}/total_fea.npy')
+                if file.startswith('G_'):
+                    g_file = file.split("_")
+                    g_file_1 = g_file[1].split(".")
+                    MODEL_EPOCH = g_file_1[0]
+                    shutil.copy(file_path,f'./logs/{model}/G_{MODEL_EPOCH}.pth')
+                    shutil.copy(file_path,f'./logs/{model}/D_{MODEL_EPOCH}.pth')
                 elif "G_" not in file and "D_" not in file and file.endswith(".pth"):
                     shutil.copy(file_path,f'./weights/{model}.pth')
         shutil.rmtree("zips")
