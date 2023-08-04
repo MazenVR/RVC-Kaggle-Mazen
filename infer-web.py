@@ -1659,19 +1659,32 @@ def get_name():
     
 def zip_downloader(model):
     if not os.path.exists(f'./weights/{model}.pth'):
-        return {"__type__": "update"}, f'Make sure the Voice Name is correct. I could not find {model}.pth'
+        return {"__type__": "update"}, f'Make sure the Model Name is correct. I could not find {model}.pth'
     index_found = False
     MODEL_EPOCH = 0
+    all_model_files=[]
     for file in os.listdir(f'./logs/{model}'):
         if file.endswith('.index') and 'added' in file:
             log_file = file
             index_found = True
+            index_url = f'./logs/{model}/{log_file}'
+            model_url = f'./weights/{model}.pth'
+            all_model_files.append(index_url)
+            all_model_files.append(model_url)
+        if file.endswith(".npy"):
+            total_npy_url = f'./logs/{model}/total_fea.npy'
+            all_model_files.append(total_npy_url)
         if file.startswith('G_') and '.pth' in file:
             g_file = file.split("_")
             g_file_1 = g_file[1].split(".")
             MODEL_EPOCH = g_file_1[0]
+            g_file_url = f'./logs/{model}/G_{MODEL_EPOCH}.pth'
+            all_model_files.append(g_file_url)
+            d_file_url = f'./logs/{model}/D_{MODEL_EPOCH}.pth'
+            all_model_files.append(d_file_url)
     if index_found:
-        return [f'./weights/{model}.pth', f'./logs/{model}/{log_file}', f'./logs/{model}/total_fea.npy', f'./logs/{model}/G_{MODEL_EPOCH}.pth', f'./logs/{model}/D_{MODEL_EPOCH}.pth'], "Done"
+        # return [f'./weights/{model}.pth', f'./logs/{model}/{log_file}', f'./logs/{model}/total_fea.npy', f'./logs/{model}/G_{MODEL_EPOCH}.pth', f'./logs/{model}/D_{MODEL_EPOCH}.pth'], "Done"
+        return all_model_files, "Done"
     else:
         return f'./weights/{model}.pth', "Could not find Index file."
     
@@ -1724,7 +1737,8 @@ def download_from_url(url, model):
                 if file.endswith(".index"):
                     os.makedirs(f'./logs/{model}', exist_ok=True)
                     shutil.copy(file_path,f'./logs/{model}')
-                    shutil.copy(file_path,f'./logs/{model}/total_fea.npy')
+                    if file.endswith(".npy"):
+                        shutil.copy(file_path,f'./logs/{model}/total_fea.npy')
                 if file.startswith('G_'):
                     g_file = file.split("_")
                     g_file_1 = g_file[1].split(".")
@@ -2326,21 +2340,19 @@ with gr.Blocks(theme=gr.themes.Soft(primary_hue="sky").set(
                         info3,
                     )
         with gr.TabItem("Model Manger مدير النماذج"):
-            with gr.Accordion("Import Model From URL To Working Folder إستيراد نموذج من رابط لمجلد العمل", open=True):
-                # gr.Markdown(value="Import model From URL")
+            with gr.Accordion("Import From Google Drive To Working Folder إستيراد نموذج لمجلد العمل", open=True):
                 with gr.Column():
-                    Help_bar_0=gr.Textbox(label="", value="Import From Google Drive")
-                    gdrive_file_ID=gr.Textbox(label="Enter Google Drive File ID")
-                    model = gr.Textbox(label="Enter Model Name (Name must be as model saved name)")
-                    download_button=gr.Button("Download Model",  variant="primary")
+                    gdrive_file_ID=gr.Textbox(label="Enter Google Drive File ID:")
+                    model = gr.Textbox(label="Enter Model Name (Name must be as model saved name):")
                     status_bar_0=gr.Textbox(label="Log سجل النتائج")
+                    download_button=gr.Button("Download Model From Google Drive",  variant="primary")
                     download_button.click(fn=download_from_url, inputs=[gdrive_file_ID, model], outputs=[status_bar_0])
             with gr.Accordion("Export Model تصدير النموذج ", open=False):
                 with gr.Column():
-                    model_to_downlaod = gr.Textbox(label="Enter Model Name: أدخل إسم النموذج")
-                    zipped_model = gr.Files(label='Model and Index file can be downloaded here: النموذج والملف الفهرسي يمكن تحميلهم من هنا')
+                    model_to_downlaod = gr.Textbox(label="Enter Model Name:")
+                    zipped_model = gr.Files(label='Model files can be downloaded here:')
                     status_bar_1=gr.Textbox(label="Log سجل النتائج")
-                    zip_model = gr.Button('Download Model تحميل النموذج', variant="primary")
+                    zip_model = gr.Button('Download Model From Working Folder', variant="primary")
                     zip_model.click(fn=zip_downloader, inputs=[model_to_downlaod], outputs=[zipped_model, status_bar_1])
             with gr.Accordion("Help مساعدة", open=False, visible=False):
                 with gr.Column():
