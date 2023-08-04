@@ -1635,9 +1635,17 @@ def get_presets():
     return preset_names
 
 def save_wav(audioFile):
-    file_path=audioFile.name
-    shutil.copy2(file_path,'./audios')
-    return os.path.join('./audios',os.path.basename(file_path))
+    if audioFile != None:
+        file_path=audioFile.name
+        shutil.copy2(file_path,'./audios')
+        print(os.path.join('./audios',os.path.basename(file_path)))
+        return os.path.join('./audios',os.path.basename(file_path))
+
+def wav_change(audioFile):
+    if audioFile != None:
+        file_path=audioFile.name
+        print(os.path.join('./audios',os.path.basename(file_path)))
+        return os.path.join('./audios',os.path.basename(file_path))
 
 def change_choices2():
     audio_files=[]
@@ -1812,7 +1820,8 @@ with gr.Blocks(theme=gr.themes.Soft(primary_hue="sky").set(
                         #     choices=audio_files
                         #     )
                         dropbox_audio = gr.File(label="Drop your audio here", show_progress=True)
-                        dropbox_audio.upload(fn=save_wav, inputs=dropbox_audio, outputs=input_audio0)
+                        dropbox_audio.upload(fn=save_wav, inputs=dropbox_audio, outputs=input_audio0, show_progress=True)
+                        dropbox_audio.change(fn=wav_change, inputs=dropbox_audio, outputs=input_audio0, show_progress=True)
                         #dropbox_audio.upload(fn=change_choices2, inputs=[], outputs=[input_audio0])
                         #input_audio1.change(fn=change_choices2, inputs=[], outputs=[input_audio0])
                         #refresh_audio_button = gr.Button("Refresh", variant="primary", size='sm')
