@@ -1694,7 +1694,6 @@ def download_from_url(url, model):
         return "You need to name your model. For example: Mazen-Model"
     url = url.strip()
     zip_dirs = ["zips", "unzips"]
-    MODEL_EPOCH = 0
     for directory in zip_dirs:
         if os.path.exists(directory):
             shutil.rmtree(directory)
@@ -1722,16 +1721,8 @@ def download_from_url(url, model):
                 if file.endswith(".index"):
                     os.mkdir(f'./logs/{model}')
                     shutil.copy2(file_path,f'./logs/{model}')
-                if "G_" not in file and "D_" not in file and file.endswith(".pth"):
+                elif "G_" not in file and "D_" not in file and file.endswith(".pth"):
                     shutil.copy(file_path,f'./weights/{model}.pth')
-                if file.startswith('G_') and '.pth' in file:
-                    g_file = file.split("_")
-                    g_file_1 = g_file[1].split(".")
-                    MODEL_EPOCH = g_file_1[0]
-                    shutil.copy(file_path,f'./logs/{model}/G_{MODEL_EPOCH}.pth')
-                    shutil.copy(file_path,f'./logs/{model}/D_{MODEL_EPOCH}.pth')
-                    shutil.copy(file_path,f'./logs/{model}/total_fea.npy')
-                
         shutil.rmtree("zips")
         shutil.rmtree("unzips")
         return "Success."
