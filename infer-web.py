@@ -1810,6 +1810,7 @@ def download_model_full_from_url(url, model):
                 if dir == model:
                     try:
                         shutil.copytree(f'./model_unzips/{model}/', f'./logs/{model}')
+                        return f'Success >>> {model} Full Model'
                     except:
                         return "There's been an error. Code:Copy005"
     except:
@@ -2405,36 +2406,39 @@ with gr.Blocks(theme=gr.themes.Soft(primary_hue="sky").set(
                         info3,
                     )
         with gr.TabItem("Model Manger مدير النماذج"):
-            with gr.Accordion("Import From Google Drive To Working Folder إستيراد نموذج لمجلد العمل", open=False):
-                with gr.Column():
-                    gdrive_file_ID=gr.Textbox(label="Enter Google Drive File ID:")
-                    model = gr.Textbox(label="Enter Model Name (Name must be as model saved name):")
-                    status_bar_0=gr.Textbox(label="Log سجل النتائج")
-                    download_button=gr.Button("Download Model From Google Drive",  variant="primary")
-                    download_button.click(fn=download_from_url, inputs=[gdrive_file_ID, model], outputs=[status_bar_0])
-            with gr.Accordion("Export Model تصدير النموذج ", open=False):
-                with gr.Column():
-                    model_to_downlaod = gr.Textbox(label="Enter Model Name:")
-                    zipped_model = gr.Files(label='Model files can be downloaded here:')
-                    status_bar_1=gr.Textbox(label="Log سجل النتائج")
-                    zip_model_button = gr.Button('Download Model From Working Folder', variant="primary")
-                    zip_model_button.click(fn=zip_downloader, inputs=[model_to_downlaod], outputs=[zipped_model, status_bar_1])
+            with gr.Accordion("Import Export Trained Model (For Inference Only)", open=False):
+                with gr.Accordion("Import From Google Drive To Working Folder إستيراد نموذج لمجلد العمل", open=False):
+                    with gr.Column():
+                        gdrive_file_ID=gr.Textbox(label="Enter Google Drive File ID:")
+                        model = gr.Textbox(label="Enter Model Name (Name must be as model saved name):")
+                        status_bar_0=gr.Textbox(label="Log سجل النتائج")
+                        download_button=gr.Button("Download Model From Google Drive",  variant="primary")
+                        download_button.click(fn=download_from_url, inputs=[gdrive_file_ID, model], outputs=[status_bar_0])
+                with gr.Accordion("Export Model تصدير النموذج ", open=False):
+                    with gr.Column():
+                        model_to_downlaod = gr.Textbox(label="Enter Model Name:")
+                        zipped_model = gr.Files(label='Model files can be downloaded here:')
+                        status_bar_1=gr.Textbox(label="Log سجل النتائج")
+                        zip_model_button = gr.Button('Download Model From Working Folder', variant="primary")
+                        zip_model_button.click(fn=zip_downloader, inputs=[model_to_downlaod], outputs=[zipped_model, status_bar_1])
 
-            with gr.Accordion("Advanced Import From Google Drive To Working Folder", open=True):
-                with gr.Column():
-                    gdrive_file_ID=gr.Textbox(label="Enter Google Drive File ID:")
-                    model = gr.Textbox(label="Enter Model Name (Name must be as model saved name):")
-                    status_bar_0=gr.Textbox(label="Log سجل النتائج")
-                    download_button=gr.Button("Download Full Model From Google Drive",  variant="primary")
-                    download_button.click(fn=download_model_full_from_url, inputs=[gdrive_file_ID, model], outputs=[status_bar_0])
+            with gr.Accordion("Import Export Full Model (For Re-Train)", open=False):
 
-            with gr.Accordion("Export Model Advanced", open=False):
-                with gr.Column():
-                    model_name_to_downlaod = gr.Textbox(label="Enter Model Name:")
-                    zipped_model.full = gr.File(label='Model .zip can be downloaded here:')
-                    status_bar_2=gr.Textbox(label="Log سجل النتائج")
-                    zip_model_full_button = gr.Button('Download ZIP Model From Working Folder', variant="primary")
-                    zip_model_full_button.click(fn=zip_downloader_full, inputs=[model_name_to_downlaod], outputs=[zipped_model.full, status_bar_2])
+                with gr.Accordion("Import Full Model From Google Drive To Working Folder", open=False):
+                    with gr.Column():
+                        gdrive_file_ID=gr.Textbox(label="Enter Google Drive File ID:")
+                        model = gr.Textbox(label="Enter Model Name (Name must be as model saved name):")
+                        status_bar_0=gr.Textbox(label="Log سجل النتائج")
+                        download_button=gr.Button("Download Full Model From Google Drive",  variant="primary")
+                        download_button.click(fn=download_model_full_from_url, inputs=[gdrive_file_ID, model], outputs=[status_bar_0])
+
+                with gr.Accordion("Export Full Model", open=False):
+                    with gr.Column():
+                        model_name_to_downlaod = gr.Textbox(label="Enter Model Name:")
+                        zipped_model.full = gr.File(label='Model .zip can be downloaded here:')
+                        status_bar_2=gr.Textbox(label="Log سجل النتائج")
+                        zip_model_full_button = gr.Button('Download ZIP Model From Working Folder', variant="primary")
+                        zip_model_full_button.click(fn=zip_downloader_full, inputs=[model_name_to_downlaod], outputs=[zipped_model.full, status_bar_2])
 
             with gr.Accordion("Help مساعدة", open=False, visible=False):
                 with gr.Column():
