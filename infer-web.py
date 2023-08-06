@@ -45,6 +45,7 @@ import subprocess
 
 from subprocess import Popen
 from mega import Mega
+from shutil import make_archive
 
 logging.getLogger("numba").setLevel(logging.WARNING)
 
@@ -1696,6 +1697,22 @@ def zip_downloader(model):
     else:
         return f'./weights/{model}.pth', "Could not find Index file."
     
+def zip_downloader_full(model):
+    if not os.path.exists(f'./weights/{model}.pth'):
+        return {"__type__": "update"}, f'Make sure the Model Name is correct. I could not find {model}.pth'
+    model_dirs = model
+    if os.path.exists(model_dirs):
+        shutil.rmtree(model_dirs)
+    os.makedirs(model, exist_ok=True)
+    model_temp_path = f'./{model}/' + model_dirs
+    try:
+        shutil.copytree(f'./logs/{model}/', model_temp_path)
+        shutil.copy(f'./weights/{model}.pth', f'./{model}/')
+        shutil.make_archive(model, 'zip', f'./{model}/')
+        return f'./{model}.zip', f'Success >>> {model} Model Ziped'
+    except:
+        return "There's been an error."
+
 def audio_downloader():
     aud_files_list=[]
     if not os.path.exists(f'./opt'):
@@ -1710,7 +1727,7 @@ def audio_downloader():
 
 def download_from_url(url, model):
     if url == '':
-        return "URL cannot be left empty."
+        return "Google Drive File ID cannot be left empty."
     if model =='':
         return "You need to name your model. For example: Mazen-Model"
     url_full = f'https://drive.google.com/uc?id={url}'
@@ -1761,6 +1778,44 @@ def download_from_url(url, model):
     except:
         return "There's been an error."
     
+def download_model_full_from_url(url, model):
+    if url == '':
+        return "Google Drive File ID cannot be left empty."
+    if model =='':
+        return "You need to name your model. For example: Mazen-Model"
+    url_full = f'https://drive.google.com/uc?id={url}'
+    url = url_full
+    url = url.strip()
+    zip_dirs = ["model_zips", "model_unzips"]
+    for directory in zip_dirs:
+        if os.path.exists(directory):
+            shutil.rmtree(directory)
+    os.makedirs("model_zips", exist_ok=True)
+    os.makedirs("model_unzips", exist_ok=True)
+    zipfile = model + '.zip'
+    zipfile_path = './model_zips/' + zipfile
+    try:
+        subprocess.run(["gdown", url, "--fuzzy", "-O", zipfile_path])
+        for filename in os.listdir("./model_zips"):
+            if filename.endswith(".zip"):
+                zipfile_path = os.path.join("./model_zips/",filename)
+                shutil.unpack_archive(zipfile_path, "./model_unzips", 'zip')
+            else:
+                return "No Model zipfile found."
+        for root, dirs, files in os.walk('./model_unzips'):
+            for file in files:
+                if file.endswith('.pth') and model in file:
+                    shutil.copy(f'./model_unzips/{model}.pth', f'./weights/{model}.pth')
+            for dir in dirs:
+                if dir == model:
+                    try:
+                        shutil.copytree(f'./model_unzips/{model}/', f'./logs/{model}')
+                    except:
+                        return "There's been an error. Code:Copy005"
+    except:
+        return "There's been an error."
+
+
 def getAudioFilePath(file):
     return file
     
@@ -2350,7 +2405,7 @@ with gr.Blocks(theme=gr.themes.Soft(primary_hue="sky").set(
                         info3,
                     )
         with gr.TabItem("Model Manger مدير النماذج"):
-            with gr.Accordion("Import From Google Drive To Working Folder إستيراد نموذج لمجلد العمل", open=True):
+            with gr.Accordion("Import From Google Drive To Working Folder إستيراد نموذج لمجلد العمل", open=False):
                 with gr.Column():
                     gdrive_file_ID=gr.Textbox(label="Enter Google Drive File ID:")
                     model = gr.Textbox(label="Enter Model Name (Name must be as model saved name):")
@@ -2362,8 +2417,25 @@ with gr.Blocks(theme=gr.themes.Soft(primary_hue="sky").set(
                     model_to_downlaod = gr.Textbox(label="Enter Model Name:")
                     zipped_model = gr.Files(label='Model files can be downloaded here:')
                     status_bar_1=gr.Textbox(label="Log سجل النتائج")
-                    zip_model = gr.Button('Download Model From Working Folder', variant="primary")
-                    zip_model.click(fn=zip_downloader, inputs=[model_to_downlaod], outputs=[zipped_model, status_bar_1])
+                    zip_model_button = gr.Button('Download Model From Working Folder', variant="primary")
+                    zip_model_button.click(fn=zip_downloader, inputs=[model_to_downlaod], outputs=[zipped_model, status_bar_1])
+
+            with gr.Accordion("Advanced Import From Google Drive To Working Folder", open=True):
+                with gr.Column():
+                    gdrive_file_ID=gr.Textbox(label="Enter Google Drive File ID:")
+                    model = gr.Textbox(label="Enter Model Name (Name must be as model saved name):")
+                    status_bar_0=gr.Textbox(label="Log سجل النتائج")
+                    download_button=gr.Button("Download Full Model From Google Drive",  variant="primary")
+                    download_button.click(fn=download_model_full_from_url, inputs=[gdrive_file_ID, model], outputs=[status_bar_0])
+
+            with gr.Accordion("Export Model Advanced", open=False):
+                with gr.Column():
+                    model_name_to_downlaod = gr.Textbox(label="Enter Model Name:")
+                    zipped_model.full = gr.File(label='Model .zip can be downloaded here:')
+                    status_bar_2=gr.Textbox(label="Log سجل النتائج")
+                    zip_model_full_button = gr.Button('Download ZIP Model From Working Folder', variant="primary")
+                    zip_model_full_button.click(fn=zip_downloader_full, inputs=[model_name_to_downlaod], outputs=[zipped_model.full, status_bar_2])
+
             with gr.Accordion("Help مساعدة", open=False, visible=False):
                 with gr.Column():
                     Help_bar_1=gr.Textbox(label="", value="Recommended to use MEGA for file uploading ننصح بإستخدام موقع ميجا لتحميل الملفات")
