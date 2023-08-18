@@ -62,7 +62,7 @@
   "每张显卡的batch_size": "Pack size for video card: حجم الحزمة لبطاقة الرسوم",
   "是否仅保存最新的ckpt文件以节省硬盘空间": "Keep only the latest '.ckpt' file to save disk space?: حفظ أخر ملف فقط لتوفير مساحة؟",
   "否": "No",
-  "是否缓存所有训练集至显存. 10min以下小数据可缓存以加速训练, 大数据缓存会炸显存也加不了多少速": "Cache all training sets to video memory. Caching small datasets (less than 10 minutes) can speed up training, but caching large datasets, on the contrary, will take up a lot of video memory and will not speed up training much: إختار لا فهذه الميزة تقوم بتحميل البيانات على وحدة الرسوم وهي لا توفر في الوقت وتستهلك من وحدة الرسوم كثيرا",
+  "是否缓存所有训练集至显存. 10min以下小数据可缓存以加速训练, 大数据缓存会炸显存也加不了多少速": "Cache all training sets to video memory. Caching small datasets (less than 10 minutes) can speed up training, but caching large datasets, on the contrary, will take up a lot of video memory and will not speed up training much: ",
   "是否在每次保存时间点将最终小模型保存至weights文件夹": "Save a small final model to the 'weights' folder on each savepoint:",
   "加载预训练底模G路径": "The Path to the Trained Base Model G:",
   "加载预训练底模D路径": "The path to the trained base model D:",

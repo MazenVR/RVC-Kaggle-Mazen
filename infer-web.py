@@ -1823,7 +1823,7 @@ def getAudioFilePath(file):
 with gr.Blocks(theme=gr.themes.Soft(primary_hue="sky").set(
     button_primary_background_fill="*primary_100",
     button_primary_background_fill_hover="*primary_150"), title="RVC Mazen VR") as app:
-    gr.HTML("<h1> <center> RVC [Fork by Mazen VR] إستنساخ الصوت بالذكاء الإصطناعي </center></h1>")
+    gr.HTML("<h1> <center> RVC [Fork by Mazen VR Updated 18-8-2023] إستنساخ الصوت بالذكاء الإصطناعي </center></h1>")
     # gr.Markdown(
     #     value="<b>https://www.youtube.com/@MohamedElmazen</b>"
     # )
@@ -2132,7 +2132,7 @@ with gr.Blocks(theme=gr.themes.Soft(primary_hue="sky").set(
                         )
                         wav_inputs.upload(fn=save_wav_for_vocal, inputs=wav_inputs, outputs=dir_wav_input, show_progress=True)
                     with gr.Column():
-                        model_choose = gr.Dropdown(label=i18n("模型"), choices=uvr5_names, value="HP5_only_main_vocal", visible=False)
+                        model_choose = gr.Dropdown(label=i18n("模型"), choices=uvr5_names, value="HP5_only_main_vocal", visible=True)
                         agg = gr.Slider(
                             minimum=0,
                             maximum=20,
@@ -2315,7 +2315,7 @@ with gr.Blocks(theme=gr.themes.Soft(primary_hue="sky").set(
                         choices=[i18n("是"), i18n("否")],
                         value=i18n("否"),
                         interactive=True,
-                        visible=False
+                        visible=True
                     )
                     if_save_every_weights18 = gr.Radio(
                         label=i18n("是否在每次保存时间点将最终小模型保存至weights文件夹"),
