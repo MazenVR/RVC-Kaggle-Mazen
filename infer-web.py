@@ -1725,8 +1725,12 @@ def audio_downloader():
     else:
         return aud_files_list, 'I could not find any audio file'
 
+#TODO: Add Log To All Functions    
+log = logging.getLogger("Mazen RVC [LOG] ====> ")
+
 def download_from_url(url, model):
     if url == '':
+        #log.info("Test")
         return "Google Drive File ID cannot be left empty."
     if model =='':
         return "You need to name your model. For example: Mazen-Model"
@@ -1822,8 +1826,8 @@ def getAudioFilePath(file):
     
 with gr.Blocks(theme=gr.themes.Soft(primary_hue="sky").set(
     button_primary_background_fill="*primary_100",
-    button_primary_background_fill_hover="*primary_150"), title="RVC Mazen VR") as app:
-    gr.HTML("<h1> <center> RVC [Fork by Mazen VR Updated 18-8-2023] إستنساخ الصوت بالذكاء الإصطناعي </center></h1>")
+    button_primary_background_fill_hover="*primary_150"), title="Mazen RVC") as app:
+    gr.HTML("<h1><center> Mazen RVC [Fork by Mazen VR Updated 21-8-2023] إستنساخ الصوت بالذكاء الإصطناعي </center></h1>")
     # gr.Markdown(
     #     value="<b>https://www.youtube.com/@MohamedElmazen</b>"
     # )

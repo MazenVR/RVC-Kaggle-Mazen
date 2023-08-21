@@ -2,7 +2,31 @@ import argparse
 import sys
 import torch
 from multiprocessing import cpu_count
+import logging
 
+FMT = "[{levelname:^9}] {name}: {message}"
+FORMATS ={
+    logging.DEBUG: FMT,
+    logging.INFO: f"\33[36m{FMT}\33[0m",
+    logging.WARN: f"\33[33m{FMT}\33[0m",
+    logging.ERROR: f"\33[31m{FMT}\33[0m",
+    logging.CRITICAL: f"\33[1m\33[31m{FMT}\33[0m",
+}
+
+class CustomFormatter(logging.Formatter):
+    def format(self, record):
+        log_fmt = FORMATS[record.levelno]
+        formatter = logging.Formatter(log_fmt, style="{")
+        return formatter.format(record)
+
+handler = logging.StreamHandler()
+handler.setFormatter(CustomFormatter())
+logging.basicConfig(
+    level=logging.INFO,
+    handlers=[handler]
+)
+
+log = logging.getLogger("Mazen RVC [LOG] ====> ")
 
 def use_fp32_config():
     for config_file in ["32k.json", "40k.json", "48k.json"]:
@@ -98,6 +122,8 @@ class Config:
                 use_fp32_config()
             else:
                 print("Found GPU", self.gpu_name)
+                #print("Mazen RVC >>>> [Last Updated 21-8-2023]")
+                log.info("Welcome To Mazen RVC [Last Updated 21-8-2023]")
             self.gpu_mem = int(
                 torch.cuda.get_device_properties(i_device).total_memory
                 / 1024
