@@ -7,7 +7,7 @@ import logging
 FMT = "[{levelname:^9}] {name}: {message}"
 FORMATS ={
     logging.DEBUG: FMT,
-    logging.INFO: f"\34[36m{FMT}\33[0m",
+    logging.INFO: f"\33[35m{FMT}\33[0m",
     logging.WARN: f"\33[33m{FMT}\33[0m",
     logging.ERROR: f"\33[31m{FMT}\33[0m",
     logging.CRITICAL: f"\33[1m\33[31m{FMT}\33[0m",
