@@ -1,6 +1,7 @@
 .DS_Store
 __pycache__
 /TEMP
+/logs/Amr
 *.pyd
 hubert_base.pt
 .venv
