@@ -26,8 +26,6 @@ logging.basicConfig(
     handlers=[handler]
 )
 
-log = logging.getLogger("Mazen RVC [LOG] ====> ")
-
 def use_fp32_config():
     for config_file in ["32k.json", "40k.json", "48k.json"]:
         with open(f"configs/{config_file}", "r") as f:
@@ -107,6 +105,7 @@ class Config:
             return False
 
     def device_config(self) -> tuple:
+        log = logging.getLogger("Mazen RVC [LOG] ====> ")
         if torch.cuda.is_available():
             i_device = int(self.device.split(":")[-1])
             self.gpu_name = torch.cuda.get_device_name(i_device)
