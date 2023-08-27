@@ -123,7 +123,7 @@ class Config:
             else:
                 print("Found GPU", self.gpu_name)
                 #print("Mazen RVC >>>> [Last Updated 21-8-2023]")
-                log.info("Welcome To Mazen RVC [Last Updated 21-8-2023]")
+                log.info("Welcome To Mazen RVC [Last Updated 27-8-2023]")
             self.gpu_mem = int(
                 torch.cuda.get_device_properties(i_device).total_memory
                 / 1024
