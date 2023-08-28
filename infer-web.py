@@ -989,7 +989,7 @@ def train_index(exp_dir1, version19):
         % (exp_dir, n_ivf, index_ivf.nprobe, exp_dir1, version19),
     )
     infos.append(
-        "成功构建索引，added_IVF%s_Flat_nprobe_%s_%s_%s.index"
+        "Successfully built index，added_IVF%s_Flat_nprobe_%s_%s_%s.index"
         % (n_ivf, index_ivf.nprobe, exp_dir1, version19)
     )
     # faiss.write_index(index, '%s/added_IVF%s_Flat_FastScan_%s.index'%(exp_dir,n_ivf,version19))
