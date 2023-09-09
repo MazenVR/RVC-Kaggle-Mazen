@@ -117,13 +117,13 @@ class Config:
                 or "1080" in self.gpu_name
             ):
                 print("Found GPU", self.gpu_name, ", force to fp32")
-                log.info("Welcome To Mazen RVC [Last Updated 27-8-2023]")
+                log.info("Welcome To Mazen RVC [Last Updated 9-9-2023]")
                 self.is_half = False
                 use_fp32_config()
             else:
                 print("Found GPU", self.gpu_name)
                 #print("Mazen RVC >>>> [Last Updated 21-8-2023]")
-                log.info("Welcome To Mazen RVC [Last Updated 27-8-2023]")
+                log.info("Welcome To Mazen RVC [Last Updated 9-9-2023]")
             self.gpu_mem = int(
                 torch.cuda.get_device_properties(i_device).total_memory
                 / 1024

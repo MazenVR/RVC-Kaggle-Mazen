@@ -1814,6 +1814,8 @@ def download_model_full_from_url(url, model):
                 if dir == model:
                     try:
                         shutil.copytree(f'./model_unzips/{model}/', f'./logs/{model}')
+                        shutil.rmtree("model_zips")
+                        shutil.rmtree("model_unzips")
                         return f'Success >>> {model} Full Model'
                     except:
                         return "There's been an error. Code:Copy005"
@@ -1827,7 +1829,7 @@ def getAudioFilePath(file):
 with gr.Blocks(theme=gr.themes.Soft(primary_hue="sky").set(
     button_primary_background_fill="*primary_100",
     button_primary_background_fill_hover="*primary_150"), title="Mazen RVC") as app:
-    gr.HTML("<h1><center> Mazen RVC [Fork by Mazen VR Updated 27-8-2023] إستنساخ الصوت بالذكاء الإصطناعي </center></h1>")
+    gr.HTML("<h1><center> Mazen RVC [Fork by Mazen VR Updated 9-9-2023] إستنساخ الصوت بالذكاء الإصطناعي </center></h1>")
     # gr.Markdown(
     #     value="<b>https://www.youtube.com/@MohamedElmazen</b>"
     # )
