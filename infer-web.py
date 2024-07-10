@@ -1829,7 +1829,7 @@ def getAudioFilePath(file):
 with gr.Blocks(theme=gr.themes.Soft(primary_hue="sky").set(
     button_primary_background_fill="*primary_100",
     button_primary_background_fill_hover="*primary_150"), title="Mazen RVC") as app:
-    gr.HTML("<h1><center> Mazen RVC [Fork by Mazen VR Updated 9-9-2023] إستنساخ الصوت بالذكاء الإصطناعي </center></h1>")
+    gr.HTML("<h1><center> Mazen RVC [Fork by Mazen VR Updated 10-7-2024] إستنساخ الصوت بالذكاء الإصطناعي </center></h1>")
     # gr.Markdown(
     #     value="<b>https://www.youtube.com/@MohamedElmazen</b>"
     # )
